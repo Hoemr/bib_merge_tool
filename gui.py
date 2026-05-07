@@ -42,7 +42,18 @@ class AppState:
         self.merge_decisions.clear()
 
     def rebuild_final(self) -> None:
-        self.final_entries = self.unique_entries + self.merged_entries
+        # Unique entries (no duplicates)
+        out = list(self.unique_entries)
+        # Merged or kept entries from resolved duplicate groups
+        out.extend(self.merged_entries)
+        # Unresolved (skipped) duplicate groups — keep all their entries
+        for group in self.unresolved_groups:
+            out.extend(group)
+        # Also include entries from groups that haven't been acted on yet
+        for gi, group in enumerate(self.dup_groups):
+            if gi not in self.merge_decisions:
+                out.extend(group)
+        self.final_entries = out
         resolve_key_conflicts(self.final_entries, preserve_existing=True)
 
 
