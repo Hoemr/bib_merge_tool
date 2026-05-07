@@ -1,0 +1,5 @@
+bibtexparser>=1.4.0
+rapidfuzz>=3.0.0
+
+# Build exe (optional)
+pyinstaller>=6.0
